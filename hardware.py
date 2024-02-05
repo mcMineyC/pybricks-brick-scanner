@@ -36,7 +36,8 @@ def move_studs(studs):
 
 def get_degrees_touchy():
     global touchy
-    return touchy.position * (360 / touchy.count_per_rot)
+    pos = touchy.position * (360 / touchy.count_per_rot)
+    return (pos if pos < 2900 else None)
 
 def quickInit():
     global drivetrain
@@ -73,6 +74,10 @@ def getValues():
         color  = async_color.result_queue.get()
         height = async_height.result_queue.get()
 
+        if(height is None):
+            go = False
+            break
+
         #Store values in dict, using string keys for readability
         vd['color'] = color
         vd['height'] = height
@@ -94,7 +99,6 @@ def color_read():
 
 @utils.threaded
 def height_read():
-    #TODO: Read height
     deg = 0
     while (get_degrees_touchy() > 10):
         print("Degrees is not 0: "+get_degrees_touchy())
@@ -106,7 +110,7 @@ def height_read():
     deg = get_degrees_touchy()
     print("Degrees? "+deg)
     v = deg
-    return v
+    return (None if v is None else v)
 
 
 #Main script
