@@ -8,6 +8,7 @@ import utils
 from dictionary import characters as chars
 from dictionary import colors as colormap
 from translate import translate
+import time
 #from random import randint #Used for testing while actual implementation not complete
 
 
@@ -55,6 +56,7 @@ def init():
 def touchyInit():
     global touchy
     print("(Re)Init touchy motor")
+    input("Press any key to continue.")
     touchy.on_for_rotations(100, -10)
     touchy.position = 0
 
@@ -92,23 +94,21 @@ def getValues():
 @utils.threaded
 def color_read():
     v = color_sensor.color
-    print("Color: "+v)
-    if(v == "nocolor"):
-        v = ""
+    print("Color: "+str(v))
     return v
 
 @utils.threaded
 def height_read():
     deg = 0
     while (get_degrees_touchy() > 10):
-        print("Degrees is not 0: "+get_degrees_touchy())
+        print("Degrees is not 0: "+str(get_degrees_touchy()))
         touchyInit()
     print("Degrees is 0")
     touchy.on(100)
     toucher.wait_for_pressed()
     touchy.stop()
     deg = get_degrees_touchy()
-    print("Degrees? "+deg)
+    print("Degrees? "+str(deg))
     v = deg
     return (None if v is None else v)
 
