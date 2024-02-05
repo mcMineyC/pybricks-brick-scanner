@@ -12,9 +12,12 @@ def translate(color, height):
     return string
 
 
+"""
+#Testing
 concatstr = ""
 for x in range(0,31):
     print(str(x)+ ":\t", end="")
     concatstr += " " + translate(randrange(0,6), 163+(90*x))
 
 print("\n\n"+concatstr)
+"""
