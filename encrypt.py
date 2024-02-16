@@ -12,7 +12,7 @@ def inChars(thing):
             return True
     return False
 
-while message > 0:
+while len(message) > 0:
     charcom = len(message)
     print('does ' + str(charcom) + "equal " + str(message[0:charcom]) + '?')
 
