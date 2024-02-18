@@ -38,7 +38,7 @@ def move_studs(studs):
 def get_degrees_touchy():
     global touchy
     pos = touchy.position * (360 / touchy.count_per_rot)
-    return (pos if pos < 2900 else None)
+    return pos
 
 def quickInit():
     global drivetrain
@@ -49,10 +49,11 @@ def quickInit():
     touchy = Motor(address=OUTPUT_C)
     toucher = TouchSensor(address=INPUT_4)
     color_sensor = ColorSensor(address=INPUT_3)
-@utils.threaded
+
 def init():
     touchyInit()
     return True
+
 def touchyInit():
     global touchy
     print("(Re)Init touchy motor")
@@ -63,22 +64,40 @@ def touchyInit():
 
 
 def getValues():
+    global touchy
+    global toucher
     md = dict() #Master dict
     count = 0
     go = True
     while (go):
         vd = dict() #Current stack dict
-        #Threaded sensor read
-        async_color = color_read()
-        async_height = height_read()
-
-        #Get values from async reads
-        color  = async_color.result_queue.get()
-        height = async_height.result_queue.get()
-
-        if(height is None):
+        deg = 0
+        #Wait for 0 degrees
+        while (get_degrees_touchy() > 10):
+            print("Degrees is not 0: "+str(get_degrees_touchy()))
+            time.sleep(0.1)
+        print("Degrees is 0")
+        touchy.on(100)                                              #Turn motor on forward (down)
+        while not (toucher.is_pressed == 1):
+            print("Not touched")
+            if (get_degrees_touchy() > 2900):
+                go = False
+                break
+            time.sleep(0.1)
+        if not go:
+            print("EXITING!!!!")
             go = False
+            touchy.stop()
             break
+        color = color_sensor.color_name    #Capture color
+        touchy.stop()                      #Stop motor
+        deg = get_degrees_touchy()
+        print("Degrees "+str(deg))
+        v = deg
+        if deg is not None:                                         #Check if valid
+            touchy.position_sp = 0                                  #Reset
+            touchy.run_to_abs_pos()                                 #Go? IDK why it takes two lines
+        height = deg
 
         #Store values in dict, using string keys for readability
         vd['color'] = color
@@ -86,31 +105,8 @@ def getValues():
         md[count] = vd
         count+=1
         move_studs(1)
-    print("Done reading.\n"+md)
+    print("Done reading.\n"+str(md))
     return md
-
-
-
-@utils.threaded
-def color_read():
-    v = color_sensor.color
-    print("Color: "+str(v))
-    return v
-
-@utils.threaded
-def height_read():
-    deg = 0
-    while (get_degrees_touchy() > 10):
-        print("Degrees is not 0: "+str(get_degrees_touchy()))
-        touchyInit()
-    print("Degrees is 0")
-    touchy.on(100)
-    toucher.wait_for_pressed()
-    touchy.stop()
-    deg = get_degrees_touchy()
-    print("Degrees? "+str(deg))
-    v = deg
-    return (None if v is None else v)
 
 
 #Main script
@@ -118,7 +114,7 @@ def main():
     quickInit()
     async_init = init()
     move_studs(1)
-    if(not async_init.result_queue.get()):
+    if(not async_init):
         print("Error initing.")
         return
     print("Done initing.")
