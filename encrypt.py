@@ -4,15 +4,22 @@ from dictionary import colors as colormap
 
 original_message = str(input('Enter the message you would like to encrypt into Lego bricks: '))
 message = original_message
-error = False
+output = {'color': [], 'height': []}
+error = False#4 testing
+counter = 0#4 testing
 
-def inChars(thing):
+def inChars(thing1):
     for color in colormap:
-        if thing in chars[color]:
+        if thing1 in chars[color]:
             return True
     return False
 
+def get_bricks(thing2):
+    return 
+
 while len(message) > 0:
+    couter += 1
+    print(counter)
     charcom = len(message)
 #    print('does ' + str(charcom) + "equal " + str(message[0:charcom]) + '?')
     print(message)
