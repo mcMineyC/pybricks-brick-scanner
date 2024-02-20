@@ -96,7 +96,11 @@ def getValues():
         v = deg
         if deg is not None:                                         #Check if valid
             touchy.position_sp = 0                                  #Reset
+<<<<<<< HEAD
+            touchy.run_to_abs_pos()                                 #Go? IDK why it takes two lines
+=======
             touchy.run_to_abs_pos()                                 #Go?
+>>>>>>> b75c097c1876261ec804c0df6fc320327d96b20e
         height = deg
 
         #Store values in dict, using string keys for readability
