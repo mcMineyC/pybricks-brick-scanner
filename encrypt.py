@@ -38,6 +38,7 @@ while len(message) > 0:
     message = message[charcom:len(message)]
 
 
-print('Here is your brick code:')
+print('Python array output:\n' + str(output) + '\nHere is your brick code:\n')
 for stack in range(len(output['color'])):
     print_bricks(output['color'][stack], output['height'][stack] + 1)# +1 causes list to start at 1 instead of 0
+print()
