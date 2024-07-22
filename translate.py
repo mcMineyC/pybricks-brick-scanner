@@ -4,10 +4,10 @@ import math
 from random import randrange
 
 def translate(color, height):
-    bricks = math.floor((height-163)/90) #Inverted
-    height = (bricks*(-1))+30       #Corrected with a max of 30
+    # bricks = (1 if round((height-163)/90) < 0 else round((height-163)/90)) #Inverted
+    # height = (bricks*(-1))+30-6       #Corrected with a max of 30
     color_name = color
-    string = str(chars[color_name][height-1])
+    string = str(chars[color_name][height])
     print(color_name + "\t" + str(height) + "\t\t" + string)
     return string
 

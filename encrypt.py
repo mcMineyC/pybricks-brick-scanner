@@ -35,7 +35,7 @@ while len(message) > 0:
             print('OH NO error! :-(')
             exit()
     get_bricks(message[0:charcom])#finds brick color and height, and adds those values to output
-    message = message[charcom:len(message)]
+    message = message[charcom:len(message)] #swap with message[charcom:]?
 
 
 print('Python array output:\n' + str(output) + '\nHere is your brick code:\n')
